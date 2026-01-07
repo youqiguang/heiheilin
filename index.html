@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>狸猫亲王生日快乐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        /* 封面页 */
+        .cover-page {
+            animation: fadeIn 1s ease-in;
+        }
+
+        .title {
+            font-size: 3em;
+            color: white;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+            animation: bounce 2s infinite;
+        }
+
+        .emoji {
+            font-size: 5em;
+            margin: 30px 0;
+            animation: rotate 3s ease-in-out infinite;
+        }
+
+        .main-button {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            font-size: 1.3em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+
+        .main-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* 选择页 */
+        .choice-page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .choice-button {
+            padding: 18px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .accept-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .reject-button {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .choice-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* 礼物页 */
+        .gift-page {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .gift-box {
+            width: 200px;
+            height: 200px;
+            margin: 50px auto;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .gift-box:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .ribbon-h, .ribbon-v {
+            background: #ffd700;
+            position: absolute;
+        }
+
+        .ribbon-h {
+            width: 100%;
+            height: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .ribbon-v {
+            width: 30px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bow {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 3em;
+        }
+
+        .gift-content {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .gift-content p {
+            color: #333;
+            line-height: 1.8;
+            font-size: 1.1em;
+            word-break: break-all;
+        }
+
+        /* 强制页 */
+        .force-page {
+            display: none;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .force-title {
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            margin-bottom: 50px;
+            animation: pulse 1s infinite;
+        }
+
+        .force-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 40px;
+        }
+
+        .force-button {
+            padding: 18px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            animation: fadeInButton 0.5s ease-out forwards;
+        }
+
+        .force-button:nth-child(1) { animation-delay: 0s; }
+        .force-button:nth-child(2) { animation-delay: 1s; }
+        .force-button:nth-child(3) { animation-delay: 2s; }
+        .force-button:nth-child(4) { animation-delay: 3s; }
+        .force-button:nth-child(5) { animation-delay: 4s; }
+
+        .force-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes fadeInButton {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-title {
+            font-size: 2em;
+            color: white;
+            text-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 封面页 -->
+        <div class="cover-page" id="coverPage">
+            <h1 class="title">狸猫亲王生日快乐</h1>
+            <div class="emoji">🎂🎉🎁</div>
+            <button class="main-button" onclick="showChoicePage()">点击领取神秘礼物</button>
+        </div>
+
+        <!-- 选择页 -->
+        <div class="choice-page" id="choicePage">
+            <h2 class="page-title">选择你的答案</h2>
+            <div class="buttons-container" id="buttonsContainer"></div>
+        </div>
+
+        <!-- 礼物页 -->
+        <div class="gift-page" id="giftPage">
+            <h2 class="page-title">🎊 神秘礼物来了 🎊</h2>
+            <div class="gift-box" id="giftBox" onclick="openGift()">
+                <div class="bow">🎀</div>
+                <div class="box">
+                    <div class="ribbon-h"></div>
+                    <div class="ribbon-v"></div>
+                </div>
+            </div>
+            <div class="gift-content" id="giftContent">
+                <p><strong>分享文件：</strong></p>
+                <p>base.apk</p>
+                <p><strong>链接：</strong></p>
+                <p>https://pan.xunlei.com/s/VOiNCrYSeOXMDgy_-U_y3y_HA1?pwd=crj6#</p>
+                <p style="margin-top: 15px; color: #666;">复制这段内容后打开手机迅雷App，查看更方便</p>
+            </div>
+        </div>
+
+        <!-- 强制页 -->
+        <div class="force-page" id="forcePage">
+            <h2 class="force-title">不领取还点干嘛！<br>现在就给我领！</h2>
+            <div class="force-buttons" id="forceButtons"></div>
+        </div>
+    </div>
+
+    <script>
+        let acceptCount = 1;
+        let rejectCount = 4;
+
+        function showChoicePage() {
+            document.getElementById('coverPage').style.display = 'none';
+            document.getElementById('choicePage').style.display = 'block';
+            renderButtons();
+        }
+
+        function renderButtons() {
+            const container = document.getElementById('buttonsContainer');
+            container.innerHTML = '';
+
+            // 创建领取按钮
+            for (let i = 0; i < acceptCount; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'choice-button accept-button';
+                btn.textContent = '领取喵';
+                btn.onclick = goToGiftPage;
+                container.appendChild(btn);
+            }
+
+            // 创建不领取按钮
+            for (let i = 0; i < rejectCount; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'choice-button reject-button';
+                btn.textContent = '我就不领取喵';
+                btn.onclick = handleReject;
+                container.appendChild(btn);
+            }
+        }
+
+        function handleReject() {
+            if (rejectCount > 1) {
+                acceptCount++;
+                rejectCount--;
+                renderButtons();
+            } else {
+                // 显示强制页
+                document.getElementById('choicePage').style.display = 'none';
+                document.getElementById('forcePage').style.display = 'block';
+                createForceButtons();
+            }
+        }
+
+        function createForceButtons() {
+            const container = document.getElementById('forceButtons');
+            container.innerHTML = '';
+
+            for (let i = 0; i < 5; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'force-button';
+                btn.textContent = '领取';
+                btn.onclick = goToGiftPage;
+                container.appendChild(btn);
+            }
+        }
+
+        function goToGiftPage() {
+            document.getElementById('choicePage').style.display = 'none';
+            document.getElementById('forcePage').style.display = 'none';
+            document.getElementById('giftPage').style.display = 'block';
+        }
+
+        function openGift() {
+            document.getElementById('giftBox').style.display = 'none';
+            document.getElementById('giftContent').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
